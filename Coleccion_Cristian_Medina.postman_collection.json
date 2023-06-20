@@ -1,0 +1,126 @@
+{
+	"info": {
+		"_postman_id": "78ba62df-5a05-4308-a07c-a72078399a68",
+		"name": "Coleccion_Cristian_Medina",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16002623",
+		"_collection_link": "https://red-desert-718542.postman.co/workspace/Tarea-Curso-Postman~ae018cc1-beef-4936-a73f-f59f67e291e1/collection/16002623-78ba62df-5a05-4308-a07c-a72078399a68?action=share&creator=16002623&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "ejercicio1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// 1)\tRealiza una solicitud GET a la API https://api.ipify.org?format=json. \r",
+							"//      Captura la respuesta y verifica que: \r",
+							"\r",
+							"//a)\tPetición responda en menos de 400ms\r",
+							"pm.test(\"El tiempo de la respuesta es menor a 400ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(400); // Se agrega Snippet tiempo de respuesta menor que\r",
+							"});\r",
+							"\r",
+							"\r",
+							"// b)\tAlmacenar la IP de respuesta en JSON como variable global con el siguiente nombre “myIP”.\r",
+							"var respuesta = pm.response.json(); //Se crea variable con el json del response\r",
+							"postman.setGlobalVariable('myIP', respuesta.ip); //Se asigna valor de la respuesta ip a la variable global myIP"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.ipify.org?format=json",
+					"protocol": "https",
+					"host": [
+						"api",
+						"ipify",
+						"org"
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "json"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ejercicio2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// 2)\tRealizar una solicitud GET a la API https://ipinfo.io/161.185.160.93/geo\r",
+							"//      considerando que la IP debe ser el parámetro obtenido del Request anterior.\r",
+							"//      Captura la respuesta y verifica que: \r",
+							"\r",
+							"//      A)\tParámetro timezone de Response sea: “America/Santiago”\r",
+							"//**************************************************************************//\r",
+							"//      Pirmera forma de realizar el test: agregar el snippet Response body: \r",
+							"//      Contains string\r",
+							"pm.test(\"El Body debe contener la cadena de texto 'America/Santiago'\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"America/Santiago\");\r",
+							"});\r",
+							"//**************************************************************************//\r",
+							"//      Segunda forma de realizar el test: validar que el tag timezone de la \r",
+							"//      respuesta sea \"America/Santiago\"\r",
+							"pm.test(\"timeZone debe ser 'America/Santiago'\", function(){\r",
+							"    var respuestaTimeZone = pm.response.json().timezone; //Se crea una variable con el tag timezone del response\r",
+							"pm.expect(respuestaTimeZone).eqls(\"America/Santiago\");\r",
+							"});\r",
+							"\r",
+							"// B)\tParámetro country de Response sea: “CL”\r",
+							"//      Similar al punto anterior validamos que el tag country de la \r",
+							"//      respuesta sea \"CL\". \r",
+							"//      Podría definirse una variable global que contenga todo el response, \r",
+							"//      pero como se consulta por cada tag por separado y no se validarán todos los \r",
+							"//      tags...de momento quedará así\r",
+							"pm.test(\"country debe ser 'CL'\", function(){\r",
+							"        var respuestaCountry = pm.response.json().country; //Se crea variable con el tag country del response\r",
+							"        pm.expect(respuestaCountry).eqls(\"CL\");\r",
+							"});\r",
+							"\r",
+							"// C)\tParámetro *timezone* de respuesta sea: “Santiago”\t\r",
+							"// C')\tParámetro *city* de respuesta sea: “Santiago” -> ya que como vimos en el \r",
+							"//      punto A) el timezone es \"America/Santiago\"\r",
+							"\r",
+							"//      Similar al punto anterior validamos que el tag city de la \r",
+							"//      respuesta sea \"Santiago\". \r",
+							"-pm.test(\"city debe ser 'Santiago'\", function(){\r",
+							"        var respuestaCity = pm.response.json().city; //Se crea variable con el tag city del response\r",
+							"        pm.expect(respuestaCity).eqls(\"Santiago\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://ipinfo.io/{{myIP}}/geo",
+					"protocol": "https",
+					"host": [
+						"ipinfo",
+						"io"
+					],
+					"path": [
+						"{{myIP}}",
+						"geo"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
